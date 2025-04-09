@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
+import feedReducer from "./feedSlice";
 
 const persistConfig = {
   key: "root",
@@ -21,7 +22,8 @@ const persistedReducer = persistReducer(persistConfig, userReducer);
 
 const appStore = configureStore({
   reducer: {
-    user: persistedReducer
+    user: persistedReducer,
+    feed: feedReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
