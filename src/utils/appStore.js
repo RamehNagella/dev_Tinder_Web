@@ -28,12 +28,14 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
 import feedReducer from "./feedSlice";
 import connectionReducer from "./connectionSlice";
+import requestReducer from "./requestSlice";
 
 // Combine all your reducers
 const rootReducer = combineReducers({
   user: userReducer,
   feed: feedReducer,
-  connections: connectionReducer
+  connections: connectionReducer,
+  requests: requestReducer
 });
 
 // Wrap the rootReducer with persistReducer
