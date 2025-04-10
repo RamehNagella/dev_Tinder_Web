@@ -42,3 +42,5 @@
     - built the user card on feed
     - Edit profile Feature built
     - Show Toast Message on save at profile
+
+        - see all my connections

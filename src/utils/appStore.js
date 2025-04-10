@@ -27,24 +27,29 @@ import {
 import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
 import feedReducer from "./feedSlice";
+import connectionReducer from "./connectionSlice";
 
 // Combine all your reducers
 const rootReducer = combineReducers({
   user: userReducer,
-  feed: feedReducer
+  feed: feedReducer,
+  connections: connectionReducer
 });
 
 // Wrap the rootReducer with persistReducer
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"] // 👈 persist only the `user` slice
+  whitelist: ["user", "connection"] // 👈 persist only the `user` slice
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const appStore = configureStore({
   reducer: persistedReducer,
+  devTools: {
+    serialize: true // ✅ helps DevTools show nested data correctly
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -55,6 +60,7 @@ const appStore = configureStore({
 
 export const persistor = persistStore(appStore);
 export default appStore;
+
 /*
 import { configureStore } from "@reduxjs/toolkit";
 import {
