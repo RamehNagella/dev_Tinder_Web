@@ -23,13 +23,13 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-      // console.log(res.data);
+      // console.log("/login", res.data);
 
       const userData = res.data;
       dispatch(addUser(userData));
       return navigate("/");
     } catch (err) {
-      setError(err?.response?.data || "something went wrong.");
+      setError(err?.response?.data || "Login failed. Try again.");
       // console.error(err?.response?.data || "something went wrong.");
     }
   };
@@ -50,7 +50,7 @@ const Login = () => {
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Password</legend>
             <input
-              type="text"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input"
@@ -58,7 +58,7 @@ const Login = () => {
           </fieldset>
           <p className="text-red-500">{error}</p>
           <div className="card-actions justify-center m-2">
-            <button className="btn btn-primay" onClick={handleLogin}>
+            <button className="btn btn-primary" onClick={handleLogin}>
               Login
             </button>
           </div>

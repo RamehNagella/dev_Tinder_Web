@@ -40,3 +40,5 @@
     -Logout Feature
     - Get the feed and add the feed in the store
     - built the user card on feed
+    - Edit profile Feature built
+    - Show Toast Message on save at profile

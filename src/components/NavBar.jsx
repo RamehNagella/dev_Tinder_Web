@@ -5,12 +5,14 @@ import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
-  const user = useSelector((store) => store.user.user);
+  const user = useSelector((store) => store.user);
+
+  console.log("navebar user:", user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+      await axios.post(BASE_URL + "/logout", { withCredentials: true });
       dispatch(removeUser());
       return navigate("/login");
     } catch (err) {
@@ -27,7 +29,9 @@ const NavBar = () => {
       </div>
       {user && (
         <div className="flex gap-2 flex items-center ">
-          <div className="form-control">Welcome, {user.firstName}</div>
+          <div className="form-control">
+            Welcome, {user.user?.firstName || user.firstName}
+          </div>
           <div className="dropdown dropdown-end mx-5">
             <div
               tabIndex={0}
@@ -35,7 +39,10 @@ const NavBar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img alt="user photo" src={user.photoUrl} />
+                <img
+                  alt="user photo"
+                  src={user.user?.photoUrl || user.photoUrl}
+                />
               </div>
             </div>
             <ul
