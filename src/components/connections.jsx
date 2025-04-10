@@ -6,7 +6,7 @@ import { addConnections } from "../utils/connectionSlice";
 
 const Connections = () => {
   const connections = useSelector((store) => store.connections);
-  console.log("conn: ", connections);
+  // console.log("conn: ", connections);
 
   const dispatch = useDispatch();
   const fetchConnections = async () => {
@@ -45,7 +45,6 @@ const Connections = () => {
           >
             <div>
               <img
-                qqq
                 alt="photo"
                 className="w-20 h-20 size rounded-full"
                 src={photoUrl}

@@ -18,7 +18,7 @@ const Body = () => {
         withCredentials: true
       });
       const userData = res.data;
-      console.log("/profile/view", userData);
+      // console.log("/profile/view", userData);
 
       dispatch(addUser(userData));
     } catch (err) {

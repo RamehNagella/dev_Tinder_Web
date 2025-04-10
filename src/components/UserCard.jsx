@@ -1,5 +1,5 @@
 const UserCard = ({ user }) => {
-  console.log(">>//", user);
+  // console.log(">>//", user);
   const { firstName, lastName, photoUrl, age, gender, about } = user;
   return (
     <div className="card bg-base-200 w-96 shadow-sm">
