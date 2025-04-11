@@ -15,7 +15,7 @@ const NavBar = () => {
     try {
       await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
       dispatch(removeUser());
-      dispatch(clearFeed());
+      // dispatch(clearFeed());
       return navigate("/login");
     } catch (err) {
       //Error logic redirect to error page

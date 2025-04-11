@@ -2,10 +2,13 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { clearFeed } from "../utils/feedSlice";
+import { useState } from "react";
 
 const UserCard = ({ user }) => {
   // console.log(">>//", user);
   const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
+  const [error, setError] = useState();
+
   const dispatch = useDispatch();
   const handleSendRequest = async (status, userId) => {
     try {
@@ -14,9 +17,11 @@ const UserCard = ({ user }) => {
         {},
         { withCredentials: true }
       );
+      // console.log(res);
       dispatch(clearFeed(userId));
     } catch (err) {
       console.error(err.message);
+      setError(err?.response?.data || "Login failed. Try again.");
     }
   };
   return (

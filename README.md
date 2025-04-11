@@ -46,8 +46,8 @@
         - New Page - see all my connections
         - New Page - see all connection Requests
         - Feature - Accept/Reject C0nnection Request
-
-    Remaining
         - Send/igonre the user card from Feed
         - Signup New user
+
+    Remaining
         -   E2E  Testing

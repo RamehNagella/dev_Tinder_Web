@@ -19,9 +19,9 @@ const EditProfile = ({ user }) => {
   const [photoUrl, setPhotoUrl] = useState(
     user.user?.photoUrl || user?.photoUrl
   );
-  const [age, setAge] = useState(user.user?.age || user?.age);
-  const [gender, setGender] = useState(user.user?.gender || user?.gender);
-  const [about, setAbout] = useState(user.user?.about || user?.about);
+  const [age, setAge] = useState(user.user?.age || user?.age || "");
+  const [gender, setGender] = useState(user.user?.gender || user?.gender || "");
+  const [about, setAbout] = useState(user.user?.about || user?.about || "");
 
   const [showToast, setShowToast] = useState(false);
   const [error, setError] = useState();
@@ -52,9 +52,9 @@ const EditProfile = ({ user }) => {
 
       setTimeout(() => {
         setShowToast(false);
-      }, 3000);
+      }, 5000);
 
-      return navigate("/");
+      return navigate("/profile");
     } catch (err) {
       setError(err.response.data);
     }

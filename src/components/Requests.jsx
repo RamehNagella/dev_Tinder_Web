@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequest } from "../utils/requestSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Requests = () => {
   const requests = useSelector((store) => store.requests);
@@ -16,7 +16,8 @@ const Requests = () => {
         {},
         { withCredentials: true }
       );
-      dispatch(removeRequest());
+      // console.log(res);
+      dispatch(removeRequest(_id));
     } catch (err) {
       console.error(err.message);
     }
