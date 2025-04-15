@@ -105,9 +105,11 @@
             - ls
                 assets  index.html  index.nginx-debian.html  vite.svg
 
-        After this go to ec2 instance there you will see Public IPv4 address like
+            After this go to ec2 instance there you will see Public IPv4 address like
             - http://13.60.170.179/
-            - This wont work because NGINX servers are running in port :80  so ENABLE PORT :80 in instance
+            - This wont work because NGINX servers are running in port :80  so
+
+            ENABLE PORT :80 in instance
 
             - instance ->Security -> Security Groups -> Inbound Rules (Edit inbound rules)
 
@@ -115,15 +117,43 @@
 
                 then http://13.60.170.179/ this ip address will work
 
+        BACKEND
+            - Update DB password
+            - go to backend code
+            - npm install
+            - npm start
+            - allow ec2 instnce public IP(13.60.170.179) on mongodb server (add public IPv4 address in mongodb cluster Network Access)
+            - install PM2  (this will make the application online 24/7 even we close the terminal)
+            - add backend server running port in ec2 instance Security rule to enable the port(7777) in server
+            - npm install pm2 -g (DONT FORGET -g FLAG)
+            - pm2 start npm -- start
+            - pm2 start npm "devTinder-backend" -- start (to chnge the defult name)
+            - pm2 logs (gives errors which occure, logs)
+            - pm2 list, pm2 flush <name> , pm2 stop <name> pm2 delete <name>,
+            - configure nginx -/etc/nginx/sites-available/default
+            - restart nginx - sudo systemctl restart nginx
+            - Modify the BASE_URL in frontend project to "/api"
+            - Push the code to github
+            - git log(recent commit should be there if not )
+            - git pull
+            - git log (recent commit)
+            - go to front end project folder
+            - npm run build
+            - copy the code to /var/www/html
+            -       sudo scp -r dist/* /var/www/html
+            -
+
 # nginx config
 
         server_name 13.49.244.228;
 
         location /api/ {
-                 proxy_pass http://localhost:7777/;
+                 proxy_pass http://localhost:7777/; # Pass the request to the Node.js app
                  proxy_http_version 1.1;
                  proxy_set_header Upgrade $http_upgrade;
                  proxy_set_header Connection 'upgrade';
                  proxy_set_header Host $host;
                  proxy_cache_bypass $http_upgrade;
     }
+
+# TO CONFIGURE THE NGINX THE CODE IS EXACTLY SAME AS ABOVE (EXACTLY SAME AS ABOVE including ; and .s) AND LOCATION OF THE CONFIGURE FILE IS cd /etc/nginx/sites-available/default (at this time you have to be in the aws machine terminal)

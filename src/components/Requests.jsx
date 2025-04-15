@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 const Requests = () => {
   const requests = useSelector((store) => store.requests);
-  // console.log("rrr", reques ts);
   const dispatch = useDispatch();
 
   const reviewRequest = async (status, _id) => {
@@ -16,7 +15,6 @@ const Requests = () => {
         {},
         { withCredentials: true }
       );
-      // console.log(res);
       dispatch(removeRequest(_id));
     } catch (err) {
       console.error(err.message);
@@ -28,7 +26,6 @@ const Requests = () => {
         withCredentials: true
       });
 
-      // console.log(">>connectionReq", res.data.data); //67e5a0ae2a09c5992ed92233
       dispatch(addRequests(res.data.data));
     } catch (err) {
       console.error(err);
