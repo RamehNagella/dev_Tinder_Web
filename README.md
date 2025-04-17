@@ -157,3 +157,35 @@
     }
 
 # TO CONFIGURE THE NGINX THE CODE IS EXACTLY SAME AS ABOVE (EXACTLY SAME AS ABOVE including ; and .s) AND LOCATION OF THE CONFIGURE FILE IS cd /etc/nginx/sites-available/default (at this time you have to be in the aws machine terminal)
+
+# FRONTEND commands
+
+# BACKEND commands
+
+pm2 start npm "devTinder-backend" -- start
+
+# Adding a custome Domain name
+
+    - purchase domain name from godaddy.com
+    - signup on cloudflare & add a new domain name
+
+# - change the nameservers on godaddy and point to cloudflare
+
+    - wait for sometime till your nameservers are update
+    - create A record in cloudflare->DNS->Records->Edit (A)
+    - DNS record: A devTinder.in 43.204.96.49 (taken from aws->ec2 Instnces-> PublicIpv4)
+    - Enable SSL for website
+
+# Sending Emails via SES
+
+    - Create a IAM user
+    - Give Access to AmazonSESFullAccess
+    - Verify your domain name
+    - Verify an email address
+    - Install AWS  SDK - v3
+    - code example - https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/example_code/ses#code-examples
+
+    - Setup sesClient
+    - Access credientials should be created in IAM under
+
+# https://github.com/akshaymarch7/devTinder/

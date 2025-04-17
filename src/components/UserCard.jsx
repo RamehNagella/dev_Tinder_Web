@@ -18,7 +18,7 @@ const UserCard = ({ user }) => {
       );
       dispatch(clearFeed(userId));
     } catch (err) {
-      console.error(err.message);
+      // console.error(err);
       setError(err?.response?.data || "Login failed. Try again.");
     }
   };
