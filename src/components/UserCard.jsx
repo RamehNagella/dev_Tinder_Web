@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { clearFeed } from "../utils/feedSlice";
 import { useState } from "react";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, showActions = true }) => {
   const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
   const [error, setError] = useState();
 
@@ -31,20 +31,23 @@ const UserCard = ({ user }) => {
         <h2 className="card-title">{firstName + " " + lastName}</h2>
         {age && gender && <p>{age + ", " + gender}</p>}
         <p>{about}</p>
-        <div className="card-actions justify-center my-2">
+        {showActions && (
+          
+          <div className="card-actions justify-center my-2">
           <button
             className="btn btn-primary"
             onClick={() => handleSendRequest("ignored", _id)}
-          >
+            >
             Ignore
           </button>
           <button
             className="btn btn-secondary"
             onClick={() => handleSendRequest("interested", _id)}
-          >
+            >
             Interested
           </button>
         </div>
+          )}
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ const EditProfile = ({ user }) => {
         setShowToast(false);
       }, 5000);
 
-      return navigate("/profile");
+      return navigate("/");
     } catch (err) {
       setError(err.response.data);
     }
@@ -126,6 +126,7 @@ const EditProfile = ({ user }) => {
         </div>
         <UserCard
           user={{ firstName, lastName, photoUrl, age, gender, about }}
+          showActions = {false}
         />
       </div>
       {showToast && (
