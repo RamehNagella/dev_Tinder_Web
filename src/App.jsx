@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import appStore, { persistor } from "./utils/appStore";
 // import NavBar from "./NavBar";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Body from "./components/Body";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -19,9 +20,16 @@ function App() {
             future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
           >
             <Routes>
-              <Route path="/" element={<Body />}>
+              {/* 🔓 PUBLIC ROUTE */}
+              <Route path="/login" element={<Login />} />
+              {/* 🔐 PROTECTED LAYOUT */}
+              <Route path="/" element={
+                  <ProtectedRoute>
+                    <Body />
+                  </ProtectedRoute>
+                  }
+                >
                 <Route path="/" element={<Feed />} />
-                <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/requests" element={<Requests />} />
