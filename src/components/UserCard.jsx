@@ -5,6 +5,7 @@ import { clearFeed } from "../utils/feedSlice";
 import { useState } from "react";
 
 const UserCard = ({ user, showActions = true }) => {
+  // console.log(">>", user);
   const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
   const [error, setError] = useState();
 
@@ -14,7 +15,7 @@ const UserCard = ({ user, showActions = true }) => {
       const res = await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(clearFeed(userId));
     } catch (err) {
@@ -32,22 +33,21 @@ const UserCard = ({ user, showActions = true }) => {
         {age && gender && <p>{age + ", " + gender}</p>}
         <p>{about}</p>
         {showActions && (
-          
           <div className="card-actions justify-center my-2">
-          <button
-            className="btn btn-primary"
-            onClick={() => handleSendRequest("ignored", _id)}
+            <button
+              className="btn btn-primary"
+              onClick={() => handleSendRequest("ignored", _id)}
             >
-            Ignore
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => handleSendRequest("interested", _id)}
+              Ignore
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleSendRequest("interested", _id)}
             >
-            Interested
-          </button>
-        </div>
-          )}
+              Interested
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
