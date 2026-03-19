@@ -22,7 +22,7 @@ const Chat = () => {
       const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
         withCredentials: true,
       });
-      // console.log("res::", chat.data?.messages);
+      console.log("res::", chat.data?.messages);
 
       const chatMessages = chat?.data?.messages.map((msg) => {
         return {
@@ -32,7 +32,7 @@ const Chat = () => {
           sentTime: msg.createdAt,
         };
       });
-      // console.log("chatMsg", chatMessages);
+      console.log("chatMsg", chatMessages);
 
       setMessages(chatMessages);
     } catch (err) {
@@ -57,7 +57,7 @@ const Chat = () => {
     });
     //listen messageRecieved event
     socket.on("messageRecieved", ({ firstName, lastName, text }) => {
-      // console.log(">>", "recieved: ", firstName + ": ", text);
+      console.log(">>", "recieved: ", firstName + ": ", text);
       setMessages((messages) => [...messages, { firstName, lastName, text }]);
     });
 
@@ -80,10 +80,11 @@ const Chat = () => {
     });
     setNewMessage("");
   };
+
   const formatTime = (isoString) => {
     if (!isoString) return ""; // ✅ prevent crash
 
-    console.log("ff", isoString); // 2026-03-18T21:25:51.788Z
+    // console.log("ff", isoString); // 2026-03-18T21:25:51.788Z
     // const date = new Date(isoString);
     // return date.toLocaleTimeString("en-US", {
     //   hour: "2-digit",
