@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CreateSocketConnection } from "../utils/socket";
@@ -17,12 +17,17 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
+  const bottomRef = useRef(null);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const fetchChatMessages = async () => {
     try {
       const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
         withCredentials: true,
       });
-      console.log("res::", chat.data?.messages);
+      // console.log("res::", chat.data?.messages);
 
       const chatMessages = chat?.data?.messages.map((msg) => {
         return {
@@ -32,7 +37,7 @@ const Chat = () => {
           sentTime: msg.createdAt,
         };
       });
-      console.log("chatMsg", chatMessages);
+      // console.log("chatMsg", chatMessages);
 
       setMessages(chatMessages);
     } catch (err) {
@@ -57,7 +62,7 @@ const Chat = () => {
     });
     //listen messageRecieved event
     socket.on("messageRecieved", ({ firstName, lastName, text }) => {
-      console.log(">>", "recieved: ", firstName + ": ", text);
+      // console.log(">>", "recieved: ", firstName + ": ", text);
       setMessages((messages) => [...messages, { firstName, lastName, text }]);
     });
 
@@ -78,9 +83,24 @@ const Chat = () => {
       targetUserId,
       text: newMessage,
     });
+    // 👇 optimistically add the sent message to UI immediately
+    setMessages((prev) => [
+      ...prev,
+      {
+        firstName: user?.user?.firstName,
+        lastName: user?.user?.lastName,
+        text: newMessage,
+        sentTime: new Date().toISOString(),
+      },
+    ]);
+
     setNewMessage("");
   };
-
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && newMessage.trim()) {
+      sendMessage();
+    }
+  };
   const formatTime = (isoString) => {
     if (!isoString) return ""; // ✅ prevent crash
 
@@ -134,44 +154,72 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-400">Chat</h1>
+    <div
+      className="w-full sm:w-3/4 mx-auto border border-gray-600  sm:m-5 mx-0 my-0 sm:mx-auto 
+        h-[calc(100dvh-4rem)] sm:h-[70vh] flex flex-col overflow-hidden"
+    >
+      <h1 className="p-4 text-lg font-semibold border-b border-gray-400 flex-shrink-0">
+        Chat
+      </h1>
       {/* <div className="chat chat-start"> */}
-      <div className="flex-1 overflow-scroll p-5">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-5">
         {messages.map((msg, index) => {
+          // console.log("map", msg);
+          console.log("user", user);
           return (
             <div
               key={index}
               className={
                 "chat " +
-                (user?.user?.firstName === msg.firstName
-                  ? "chat-end "
+                (user?.firstName || user?.user?.firstName === msg.firstName
+                  ? "chat-end"
                   : "chat-start")
               }
             >
-              <div className="chat-header">
+              <div className="chat-header text-xs sm:text-sm">
                 {`${msg.firstName}`}
-                <time className="text-xs opacity-50">
+                <time className="text-xs opacity-50 ml-1">
                   {" "}
                   {formatTime(msg.sentTime)}
                 </time>
               </div>
-              <div className="chat-bubble">{msg.text} </div>
-              <div className="chat-footer opacity-50"> Seen</div>
+              <div
+                className={`chat-bubble text-sm sm:text-base max-w-[70vw] sm:max-w-xs break-words
+                          ${
+                            user?.user?.firstName === msg.firstName
+                              ? "bg-gradient-to-r from-blue-600 to-cyan-400"
+                              : "bg-gradient-to-br from-rose-500 via-fuchsia-500 to-violet-600"
+                          }`}
+              >
+                {msg.text}{" "}
+              </div>
+              <div className="chat-footer opacity-50 text-xs"> Seen</div>
             </div>
           );
         })}
+        {/* invisible anchor at the bottom */}
+        <div ref={bottomRef} />
       </div>
 
-      <div className="p-2 border-t border-gray-600 flex items-center gap-2">
+      <div className="p-2 sm:p-3 border-t border-gray-600 flex items-center gap-2 flex-shrink-0">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Type here"
-          className="flex-1 border border-gray-500 text-white rounded p-2"
+          className="flex-1 border border-gray-500 text-white rounded p-2 text-sm sm:text-base bg-transparent focus:outline-none focus:border-gray-300"
         />
-        <button onClick={sendMessage} className="btn btn-success">
+        <button
+          onClick={sendMessage}
+          className="btn btn-success btn-sm sm:btn-md text-xl flex-shrink-0 
+             px-6 py-2 rounded-xl font-semibold tracking-wide
+             shadow-lg shadow-green-500/30
+             hover:scale-105 hover:shadow-green-500/50
+             active:scale-95
+             transition-all duration-200 ease-in-out
+             border-2 border-yellow-400"
+        >
           Send
         </button>
       </div>

@@ -24,14 +24,16 @@ const UserCard = ({ user, showActions = true }) => {
     }
   };
   return (
-    <div className="card bg-base-200 w-96 shadow-sm">
-      <figure>
-        <img src={photoUrl} alt="photo" />
+    <div className="card bg-gradient-to-br from-blue-400 via-teal-600 to-emerald-900 w-64 h-92 shadow-sm">
+      <figure className="rounded-lg w-full h-full flex items-center justify-center overflow-hidden p-2 rounded-xl">
+        <img src={photoUrl} alt="photo" className="rounded-xl" />
       </figure>
       <div className="card-body">
         <h2 className="card-title">{firstName + " " + lastName}</h2>
         {age && gender && <p>{age + ", " + gender}</p>}
-        <p>{about}</p>
+        <p className="text-sm mt-1 max-h-16 overflow-y-auto scrollbar-thin scrollbar-thumb-base-content/20">
+          {about}
+        </p>
         {showActions && (
           <div className="card-actions justify-center my-2">
             <button

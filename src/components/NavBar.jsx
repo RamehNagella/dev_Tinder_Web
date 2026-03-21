@@ -21,24 +21,24 @@ const NavBar = () => {
     }
   };
   return (
-    <div className="navbar bg-base-300 shadow-sm">
+    <div className="navbar bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 shadow-sm px-2 sm:px-4">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">
+        <Link to="/" className="btn btn-ghost text-2xl sm:text-xl">
           ❤️Amigo
         </Link>
       </div>
       {user && (
-        <div className="flex gap-2 flex items-center ">
-          <div className="form-control">
+        <div className="flex items-center gap-1 sm:gap-3">
+          <span className="sm:block text-sm text-black">
             Welcome, {user.user?.firstName || user.firstName}
-          </div>
-          <div className="dropdown dropdown-end mx-5">
+          </span>
+          <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-10 rounded-full">
+              <div className="w-9 sm:w-10 rounded-full ring ring-primary ring-offset-base-600 ring-offset-2">
                 <img
                   alt="user photo"
                   src={user.user?.photoUrl || user.photoUrl}
@@ -47,8 +47,11 @@ const NavBar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg"
             >
+              <li className="sm:hidden menu-title text-base-content/60 text-xs px-3 py-1">
+                {user.user?.firstName || user.firstName}
+              </li>
               <li>
                 <Link to="/profile" className="justify-between">
                   Profile
@@ -61,6 +64,7 @@ const NavBar = () => {
               <li>
                 <Link to="/requests">Requests</Link>
               </li>
+              <div className="divider my-0" />
               <li>
                 <a onClick={handleLogout}>Logout</a>
               </li>

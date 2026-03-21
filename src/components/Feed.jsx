@@ -30,8 +30,13 @@ const Feed = () => {
     return <h1 className="flex justify-center my-10"> No New Users Found!</h1>;
   return (
     feed && (
-      <div className="flex justify-center my-10">
-        <UserCard user={feed[0]} />
+      <div
+        className="flex justify-center items-center px-0 overflow-hidden
+          h-[calc(100dvh-8rem)] sm:h-[calc(100dvh-6rem)]"
+      >
+        <div className="w-64 sm:w-70 md:w-82">
+          <UserCard user={feed[0]} />
+        </div>
       </div>
     )
   );
