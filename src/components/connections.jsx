@@ -27,8 +27,8 @@ const Connections = () => {
   useEffect(() => {
     fetchConnections();
   }, []);
-  if (!connections) return "No Connections";
-  if (connections.length === 0)
+
+  if (!connections || connections.length === 0)
     return (
       <div className="flex flex-col items-center justify-center mt-20 gap-4">
         <div className="text-6xl animate-bounce">🔗</div>

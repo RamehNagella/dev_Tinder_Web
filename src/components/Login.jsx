@@ -76,10 +76,10 @@ const Login = () => {
             {/* Title */}
             <div className="text-center mb-2">
               <div className="badge badge-primary badge-outline text-lg bg-base-200 text-white tracking-widest mb-3">
-                {isLoginForm ? "WELCOME BACK" : "GET STARTED"}
+                {isLoginForm ? "WELCOME" : "GET STARTED"}
               </div>
               <h2 className="card-title justify-center text-2xl font-bold">
-                {isLoginForm ? "Sign In" : "Create Account"}
+                {isLoginForm ? "Login" : "Create Account"}
               </h2>
               <p className="text-base-content/50 text-sm mt-1">
                 {isLoginForm
@@ -155,7 +155,7 @@ const Login = () => {
                 className="btn btn-primary w-full"
                 onClick={isLoginForm ? handleLogin : handleSignup}
               >
-                {isLoginForm ? "Sign In →" : "Create Account →"}
+                {isLoginForm ? "Login →" : "Create Account →"}
               </button>
             </div>
 

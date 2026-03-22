@@ -17,7 +17,11 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
+  const [isConnected, setIsConnected] = useState(false);
+
+  const socketRef = useRef(null);
   const bottomRef = useRef(null);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -46,58 +50,73 @@ const Chat = () => {
   };
   useEffect(() => {
     fetchChatMessages();
-  }, []);
+  }, [targetUserId]);
 
   //page loads connect to the server
   useEffect(() => {
     if (!userId) {
       return;
     }
+    socketRef.current = CreateSocketConnection();
+
+    socketRef.current.on("connect", () => {
+      setIsConnected(false);
+    });
+
     //connect to the server
-    const socket = CreateSocketConnection();
-    socket.emit("joinChat", {
+    socketRef.current.emit("joinChat", {
       firstName: user?.user?.firstName,
       userId,
       targetUserId,
     });
+
     //listen messageRecieved event
-    socket.on("messageRecieved", ({ firstName, lastName, text }) => {
+    socketRef.current.on("messageRecieved", ({ firstName, lastName, text }) => {
       // console.log(">>", "recieved: ", firstName + ": ", text);
       setMessages((messages) => [...messages, { firstName, lastName, text }]);
     });
 
     return () => {
-      socket.disconnect();
+      socketRef.current.off("messageRecieved"); //prevents duplicate listeners
+      socketRef.current.disconnect();
     };
   }, [userId, targetUserId]);
 
   const sendMessage = () => {
+    if (!newMessage.trim()) return;
     //who is sending message
     // to whome we sending the message
     //what is the message
-    const socket = CreateSocketConnection();
-    socket.emit("sendMessage", {
+    // const socket = CreateSocketConnection();
+    if (!socketRef.current) {
+      // console.log("Socket not connected yet");
+      return;
+    }
+
+    socketRef.current.emit("sendMessage", {
       firstName: user?.user?.firstName,
       lastName: user?.user?.lastName,
       userId,
       targetUserId,
       text: newMessage,
     });
-    // 👇 optimistically add the sent message to UI immediately
-    setMessages((prev) => [
-      ...prev,
-      {
-        firstName: user?.user?.firstName,
-        lastName: user?.user?.lastName,
-        text: newMessage,
-        sentTime: new Date().toISOString(),
-      },
-    ]);
+    // // optimistically add the sent message to UI immediately
+    // setMessages((prev) => [
+    //   ...prev,
+    //   {
+    //     firstName: user?.user?.firstName,
+    //     lastName: user?.user?.lastName,
+    //     text: newMessage,
+    //     sentTime: new Date().toISOString(),
+    //   },
+    // ]);
 
     setNewMessage("");
   };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && newMessage.trim()) {
+      e.preventDefault();
       sendMessage();
     }
   };
@@ -155,8 +174,8 @@ const Chat = () => {
 
   return (
     <div
-      className="w-full sm:w-3/4 mx-auto border border-gray-600  sm:m-5 mx-0 my-0 sm:mx-auto 
-        h-[calc(100dvh-4rem)] sm:h-[70vh] flex flex-col overflow-hidden"
+      className="w-3/4 sm:w-1/2 mx-auto border border-gray-600  sm:m-5 mx-0 my-0 sm:mx-auto 
+        h-[calc(100dvh-8rem)] sm:h-[70vh] flex flex-col overflow-hidden"
     >
       <h1 className="p-4 text-lg font-semibold border-b border-gray-400 flex-shrink-0">
         Chat
@@ -165,7 +184,7 @@ const Chat = () => {
       <div className="flex-1 overflow-y-auto p-3 sm:p-5">
         {messages.map((msg, index) => {
           // console.log("map", msg);
-          console.log("user", user);
+          // console.log("user", user);
           return (
             <div
               key={index}
@@ -186,6 +205,7 @@ const Chat = () => {
               <div
                 className={`chat-bubble text-sm sm:text-base max-w-[70vw] sm:max-w-xs break-words
                           ${
+                            user?.firstName ||
                             user?.user?.firstName === msg.firstName
                               ? "bg-gradient-to-r from-blue-600 to-cyan-400"
                               : "bg-gradient-to-br from-rose-500 via-fuchsia-500 to-violet-600"
@@ -208,10 +228,12 @@ const Chat = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type here"
-          className="flex-1 border border-gray-500 text-white rounded p-2 text-sm sm:text-base bg-transparent focus:outline-none focus:border-gray-300"
+          className="flex-1 border border-gray-500 text-white rounded p-2 text-sm sm:text-base bg-pink-500/30 focus:outline-none focus:border-gray-300"
         />
         <button
           onClick={sendMessage}
+          disabled={!socketRef.current}
+          // disabled={!isConnected}
           className="btn btn-success btn-sm sm:btn-md text-xl flex-shrink-0 
              px-6 py-2 rounded-xl font-semibold tracking-wide
              shadow-lg shadow-green-500/30

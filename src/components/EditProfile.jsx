@@ -41,13 +41,14 @@ const EditProfile = ({ user }) => {
         },
         { withCredentials: true },
       );
+
       dispatch(addUser(res.data?.loggedInUser));
       setShowToast(true);
 
       setTimeout(() => {
         setShowToast(false);
         return navigate("/");
-      }, 7000);
+      }, 5000);
     } catch (err) {
       setError(err.response.data);
     }
@@ -57,6 +58,12 @@ const EditProfile = ({ user }) => {
     <>
       {/* <div className="flex justify-center my-10"> */}
       <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-6 my-10 px-4 py-8">
+        <div className="w-full max-w-sm flex justify-center">
+          <UserCard
+            user={{ firstName, lastName, photoUrl, age, gender, about }}
+            showActions={false}
+          />
+        </div>
         {/* <div className="flex justify-center mx-10">
           <div className="card bg-base-300 w-96 shadow-sm"> */}
         <div className="card bg-gradient-to-br from-info via-primary to-warning w-full max-w-sm shadow-sm">
@@ -130,12 +137,6 @@ const EditProfile = ({ user }) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-full max-w-sm flex justify-center">
-          <UserCard
-            user={{ firstName, lastName, photoUrl, age, gender, about }}
-            showActions={false}
-          />
         </div>
       </div>
       {showToast && (

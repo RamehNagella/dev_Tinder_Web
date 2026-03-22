@@ -27,7 +27,14 @@ const Feed = () => {
   }, []);
 
   if (!feed || feed.length === 0)
-    return <h1 className="flex justify-center my-10"> No New Users Found!</h1>;
+    return (
+      <div className="flex flex-col items-center justify-center mt-20 gap-4">
+        <div className="text-6xl animate-bounce">🔗</div>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+          No New Friends Found!
+        </h1>
+      </div>
+    );
   return (
     feed && (
       <div

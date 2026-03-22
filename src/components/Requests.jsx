@@ -37,8 +37,7 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
-  if (!requests) return "No Requests";
-  if (requests.length === 0)
+  if (!requests || requests.length === 0)
     return (
       <div className="flex flex-col items-center justify-center mt-20 gap-4">
         <div className="text-6xl animate-bounce">🔗</div>
@@ -46,7 +45,7 @@ const Requests = () => {
           No Requests Found
         </h1>
         <p className="text-base-content/50 text-sm sm:text-base text-center max-w-xs">
-          Start exploring and connect with people you vibe with!
+          Start exploring and
         </p>
         <Link
           to="/"

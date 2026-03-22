@@ -28,8 +28,8 @@ const NavBar = () => {
         </Link>
       </div>
       {user && (
-        <div className="flex items-center gap-1 sm:gap-3">
-          <span className="sm:block text-sm text-black">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="sm:block text-sm text-white">
             Welcome, {user.user?.firstName || user.firstName}
           </span>
           <div className="dropdown dropdown-end">
@@ -38,7 +38,7 @@ const NavBar = () => {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-9 sm:w-10 rounded-full ring ring-primary ring-offset-base-600 ring-offset-2">
+              <div className="w-12 sm:w-10 rounded-full ring ring-secondary ring-offset-base-600 ring-offset-2">
                 <img
                   alt="user photo"
                   src={user.user?.photoUrl || user.photoUrl}
@@ -55,7 +55,6 @@ const NavBar = () => {
               <li>
                 <Link to="/profile" className="justify-between">
                   Profile
-                  <span className="badge">New</span>
                 </Link>
               </li>
               <li>
