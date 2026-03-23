@@ -6,6 +6,8 @@ import { BASE_URL } from "./constants";
 // };
 
 export const CreateSocketConnection = () => {
+  console.log("path", location.hostname);
+
   if (location.hostname === "localhost") {
     return io(BASE_URL, {
       transports: ["websocket", "polling"],
@@ -13,8 +15,16 @@ export const CreateSocketConnection = () => {
     });
   } else {
     return io("/", {
-      path: "/api/socket.io",
+      // path: "/api/socket.io",
       transports: ["websocket", "polling"],
     });
   }
 };
+// export const CreateSocketConnection = () => {
+//   const isLocal = window.location.hostname === "localhost";
+
+//   return io(isLocal ? BASE_URL : "/", {
+//     transports: ["websocket", "polling"],
+//     withCredentials: true,
+//   });
+// };

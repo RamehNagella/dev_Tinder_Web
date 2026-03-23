@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { CreateSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
+  const location = useLocation();
+  console.log(">>", location.pathname);
   const user = useSelector((store) => store.user);
   // console.log("user:", user);
   const userId = user?.user?._id;
@@ -60,21 +62,31 @@ const Chat = () => {
     socketRef.current = CreateSocketConnection();
 
     socketRef.current.on("connect", () => {
+      console.log("Socket connected:", socketRef.current.id);
+      setIsConnected(true);
+
+      //connect to the server
+      socketRef.current.emit("joinChat", {
+        firstName: user?.user?.firstName,
+        userId,
+        targetUserId,
+      });
+    });
+    socketRef.current.on("disconnect", () => {
       setIsConnected(false);
     });
 
-    //connect to the server
-    socketRef.current.emit("joinChat", {
-      firstName: user?.user?.firstName,
-      userId,
-      targetUserId,
-    });
-
     //listen messageRecieved event
-    socketRef.current.on("messageRecieved", ({ firstName, lastName, text }) => {
-      // console.log(">>", "recieved: ", firstName + ": ", text);
-      setMessages((messages) => [...messages, { firstName, lastName, text }]);
-    });
+    socketRef.current.on(
+      "messageRecieved",
+      ({ firstName, lastName, text, sentTime }) => {
+        console.log(">>", "recieved: ", firstName + ": ", text, sentTime);
+        setMessages((messages) => [
+          ...messages,
+          { firstName, lastName, text, sentTime },
+        ]);
+      },
+    );
 
     return () => {
       socketRef.current.off("messageRecieved"); //prevents duplicate listeners
@@ -99,6 +111,7 @@ const Chat = () => {
       userId,
       targetUserId,
       text: newMessage,
+      sentTime: new Date().toISOString(),
     });
     // // optimistically add the sent message to UI immediately
     // setMessages((prev) => [
@@ -178,22 +191,19 @@ const Chat = () => {
         h-[calc(100dvh-8rem)] sm:h-[70vh] flex flex-col overflow-hidden"
     >
       <h1 className="p-4 text-lg font-semibold border-b border-gray-400 flex-shrink-0">
-        Chat
+        Chat <span></span>
       </h1>
       {/* <div className="chat chat-start"> */}
       <div className="flex-1 overflow-y-auto p-3 sm:p-5">
         {messages.map((msg, index) => {
-          // console.log("map", msg);
           // console.log("user", user);
+          const isMe =
+            user?.firstName || user?.user?.firstName === msg.firstName;
+          console.log("map", msg);
           return (
             <div
               key={index}
-              className={
-                "chat " +
-                (user?.firstName || user?.user?.firstName === msg.firstName
-                  ? "chat-end"
-                  : "chat-start")
-              }
+              className={"chat " + (isMe ? "chat-end" : "chat-start")}
             >
               <div className="chat-header text-xs sm:text-sm">
                 {`${msg.firstName}`}
@@ -205,8 +215,7 @@ const Chat = () => {
               <div
                 className={`chat-bubble text-sm sm:text-base max-w-[70vw] sm:max-w-xs break-words
                           ${
-                            user?.firstName ||
-                            user?.user?.firstName === msg.firstName
+                            isMe
                               ? "bg-gradient-to-r from-blue-600 to-cyan-400"
                               : "bg-gradient-to-br from-rose-500 via-fuchsia-500 to-violet-600"
                           }`}
@@ -232,8 +241,8 @@ const Chat = () => {
         />
         <button
           onClick={sendMessage}
-          disabled={!socketRef.current}
-          // disabled={!isConnected}
+          // disabled={!socketRef.current}
+          disabled={!isConnected}
           className="btn btn-success btn-sm sm:btn-md text-xl flex-shrink-0 
              px-6 py-2 rounded-xl font-semibold tracking-wide
              shadow-lg shadow-green-500/30
