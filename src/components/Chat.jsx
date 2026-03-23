@@ -8,7 +8,7 @@ import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const location = useLocation();
-  console.log(">>", location.pathname);
+  // console.log(">>", location.pathname);
   const user = useSelector((store) => store.user);
   // console.log("user:", user);
   const userId = user?.user?._id;
@@ -50,6 +50,7 @@ const Chat = () => {
       console.log(err.message);
     }
   };
+
   useEffect(() => {
     fetchChatMessages();
   }, [targetUserId]);
@@ -62,7 +63,7 @@ const Chat = () => {
     socketRef.current = CreateSocketConnection();
 
     socketRef.current.on("connect", () => {
-      console.log("Socket connected:", socketRef.current.id);
+      // console.log("Socket connected:", socketRef.current.id);
       setIsConnected(true);
 
       //connect to the server
@@ -72,13 +73,14 @@ const Chat = () => {
         targetUserId,
       });
     });
+
     socketRef.current.on("disconnect", () => {
       setIsConnected(false);
     });
 
     //listen messageRecieved event
     socketRef.current.on(
-      "messageRecieved",
+      "messageReceived",
       ({ firstName, lastName, text, sentTime }) => {
         console.log(">>", "recieved: ", firstName + ": ", text, sentTime);
         setMessages((messages) => [
@@ -111,8 +113,8 @@ const Chat = () => {
       userId,
       targetUserId,
       text: newMessage,
-      sentTime: new Date().toISOString(),
     });
+
     // // optimistically add the sent message to UI immediately
     // setMessages((prev) => [
     //   ...prev,
@@ -199,7 +201,7 @@ const Chat = () => {
           // console.log("user", user);
           const isMe =
             user?.firstName || user?.user?.firstName === msg.firstName;
-          console.log("map", msg);
+          // console.log("map", msg);
           return (
             <div
               key={index}
@@ -230,7 +232,7 @@ const Chat = () => {
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-2 sm:p-3 border-t border-gray-600 flex items-center gap-2 flex-shrink-0">
+      <div className="p-2 sm:p-2 border-t border-gray-600 flex items-center gap-2 flex-shrink-0">
         <input
           type="text"
           value={newMessage}
@@ -243,8 +245,8 @@ const Chat = () => {
           onClick={sendMessage}
           // disabled={!socketRef.current}
           disabled={!isConnected}
-          className="btn btn-success btn-sm sm:btn-md text-xl flex-shrink-0 
-             px-6 py-2 rounded-xl font-semibold tracking-wide
+          className="btn btn-success btn-sm text-xl flex-shrink-0 
+             px-2 py-2 rounded-xl font-semibold tracking-wide
              shadow-lg shadow-green-500/30
              hover:scale-105 hover:shadow-green-500/50
              active:scale-95
