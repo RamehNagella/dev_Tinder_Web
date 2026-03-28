@@ -78,11 +78,11 @@ const Chat = () => {
       setIsConnected(false);
     });
 
-    //listen messageRecieved event
+    //listen messageReceived event
     socketRef.current.on(
       "messageReceived",
       ({ firstName, lastName, text, sentTime }) => {
-        console.log(">>", "recieved: ", firstName + ": ", text, sentTime);
+        console.log(">>", "received: ", firstName + ": ", text, sentTime);
         setMessages((messages) => [
           ...messages,
           { firstName, lastName, text, sentTime },
@@ -91,7 +91,7 @@ const Chat = () => {
     );
 
     return () => {
-      socketRef.current.off("messageRecieved"); //prevents duplicate listeners
+      socketRef.current.off("messageReceived"); //prevents duplicate listeners
       socketRef.current.disconnect();
     };
   }, [userId, targetUserId]);
@@ -199,8 +199,7 @@ const Chat = () => {
       <div className="flex-1 overflow-y-auto p-3 sm:p-5">
         {messages.map((msg, index) => {
           // console.log("user", user);
-          const isMe =
-            user?.firstName || user?.user?.firstName === msg.firstName;
+          const isMe = user?.user?.firstName === msg.firstName;
           // console.log("map", msg);
           return (
             <div
